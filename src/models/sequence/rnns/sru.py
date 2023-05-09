@@ -115,6 +115,7 @@ class SRURNNGate(nn.Module):
             cs.append(c)
         return torch.stack(cs, dim=1), c
 
+import pdb
 
 @TransposedModule
 class SRURNN(SequenceModule):
@@ -134,6 +135,9 @@ class SRURNN(SequenceModule):
             raise NotImplementedError("Dropout currently not supported for SRU")
 
     def forward(self, x, state=None):
+        
+        pdb.set_trace()
+
         ufr = self.W_fused(x)
         ufr = rearrange(ufr, 'b l (c d) -> b l c d', c=2)
         u, fx = torch.unbind(ufr, dim=2) # (B, L, H)

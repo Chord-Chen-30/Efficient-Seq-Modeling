@@ -33,6 +33,7 @@ import torch.backends
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 
+import pdb
 
 # Lots of annoying hacks to get WandbLogger to continuously retry on failure
 class DummyExperiment:
@@ -142,6 +143,8 @@ class SequenceLightningModule(pl.LightningModule):
         # PL has some bugs, so add hooks and make sure they're only called once
         self._has_setup = False
 
+        pdb.set_trace()
+
         self.setup()  ## Added by KS
 
     def setup(self, stage=None):
@@ -156,6 +159,8 @@ class SequenceLightningModule(pl.LightningModule):
             return
         else:
             self._has_setup = True
+
+        pdb.set_trace()
 
         # Convenience feature: if model specifies encoder, combine it with main encoder
         encoder_cfg = utils.to_list(self.hparams.encoder) + utils.to_list(
@@ -290,6 +295,8 @@ class SequenceLightningModule(pl.LightningModule):
 
     def forward(self, batch):
         """Passes a batch through the encoder, backbone, and decoder"""
+        pdb.set_trace()
+        
         # z holds arguments such as sequence length
         x, y, *z = batch # z holds extra dataloader info such as resolution
         if len(z) == 0:
@@ -680,6 +687,10 @@ def train(config):
         pl.seed_everything(config.train.seed, workers=True)
     trainer = create_trainer(config)
     model = SequenceLightningModule(config)
+
+    # import pdb
+    # pdb.set_trace()
+    print(model)
 
     # Run initial validation epoch (useful for debugging, finetuning)
     if config.train.validate_at_start:
